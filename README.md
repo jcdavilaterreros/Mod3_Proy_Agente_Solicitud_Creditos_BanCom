@@ -1,3 +1,4 @@
+en tu rol especialista de GitHub al siguiente texto dale formato MARKDOWN:
 # Mod3_Proy_Agente_Solicitud_Creditos_BanCom - Agente de Préstamos BanCom – MVP (Módulo 3)
 Diseñar y construir un agente de IA que resuelva una situación concreta, con intención clara y experiencia coherente; culmina con un MVP conectado a un modelo de lenguaje y documentado en GitHub. El proyecto se organiza en 4 fases: (1) Definición del agente, (2) Diseño de experiencia, (3) Construcción del MVP, (4) Análisis crítico y evolución.
 
