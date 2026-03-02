@@ -141,14 +141,14 @@ El MVP opera con un motor conversacional basado en **estado** (state machine) y 
 
 ---
 
-## 9. Posibles mejoras o evoluciones (basado en “Proyecto_Mejora del prompt en el Replit.docx”)
+# 9. Posibles mejoras o evoluciones (basado en “Proyecto_Mejora del prompt en el Replit.docx”)
 
-- Reset correcto de la demo
+## Reset correcto de la demo
 Al ejecutar la landing debe iniciar siempre “desde cero” (evitar retomar estado anterior).
 
-- Cierre natural del flujo (sin botón forzado “Nueva solicitud”)
-  Eliminar botón de “nueva solicitud” si se percibe forzado.
-  Usar despedida personal (con nombre) + mensaje de contacto + retorno automático a landing.
+## Cierre natural del flujo (sin botón forzado “Nueva solicitud”)
+Eliminar botón de “nueva solicitud” si se percibe forzado.
+Usar despedida personal (con nombre) + mensaje de contacto + retorno automático a landing.
 
 ### Flujo de conversación con Ejecutivo
 Al elegir “Hablar con ejecutivo”, simular conversación sobre su solicitud.
