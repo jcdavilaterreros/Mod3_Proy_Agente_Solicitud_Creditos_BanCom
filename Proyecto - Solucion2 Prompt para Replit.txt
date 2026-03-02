@@ -1,0 +1,284 @@
+Actúa como un Senior Frontend Engineer + UX Engineer. Crea una aplicación web completa (HTML5 + Tailwind CSS + JavaScript vanilla, sin frameworks) para BanCom llamada:
+
+"Version3 mejorada Agente de solicitud de prestamos"
+
+La app debe ser 100% funcional en el navegador y NO debe depender de backend. Debe ser mobile-first y con máximo ancho 448px (layout tipo WhatsApp). Sin errores en consola. Código claro, modular y comentado.
+
+========================
+REGLA CRÍTICA DEL AGENTE
+========================
+- Este proyecto parte de un agente ya definido en Sprint 1 (Word: “Sprint 1 Solución Agente OnBoarding de Prestamo Juan Carlos Davila.docx”).
+- NO debes modificar su problema, rol, límites ni tipo de respuestas.
+- En esta app, el “cerebro” del agente se representará con un “SYSTEM PROMPT” que el usuario pegará tal cual.
+- Implementa la app para que pueda usar ese SYSTEM PROMPT sin alterarlo.
+
+En el código, crea una constante:
+const SPRINT1_SYSTEM_PROMPT = `PEGAR_AQUI_TEXTO_EXACTO_DEL_SPRINT1`;
+
+NO reescribas ni “mejores” ese texto. Solo consúmelo.
+
+=================================
+OBJETIVO GENERAL DE LA APLICACIÓN
+=================================
+Crear un prototipo tipo WhatsApp, integrado a una landing simple, para concretar una solicitud de préstamo. Debe sentirse conversación casual (no interrogatorio). Las respuestas del agente deben sonar naturales, cálidas, claras y accionables. La app debe validar que el usuario reciba respuesta por cada mensaje y también validar que se hayan “cargado” los documentos requeridos antes de pasar a evaluación.
+
+Aunque se menciona GPT-4o-mini, como este MVP es sin backend:
+- Implementa un motor “LLM Simulator” (respuestas humanas simuladas) que use el estado del flujo para responder.
+- Deja preparada una función callLLM(promptPayload) para futura integración con GPT-4o-mini, pero desactivada por defecto (no llamar APIs reales).
+- Incluye un toggle “Modo IA (simulado / integrado)” que por defecto sea “Simulado” y el modo “Integrado” muestre un mensaje: “Pendiente de backend / proxy seguro”.
+
+========================
+REQUISITOS FUNCIONALES
+========================
+
+1) FLUJO CONVERSACIONAL COMPLETO
+- Bienvenida inicial con mensaje personalizable:
+  "Hola, soy tu asistente BanCom. Te acompaño a completar tu solicitud de préstamo paso a paso."
+- Landing Page dentro de la misma app (vista inicial) con un CTA: “Solicitar préstamo”.
+- Selección de tipo de préstamo con tarjetas visuales:
+  - "Personal"
+  - "Para mi Negocio"
+- Chat guiado con preguntas (usa chips/botones):
+  Q1: Tipo de usuario (ej: Dependiente / Independiente / Dueño de negocio)
+  Q2: Convenio (¿Tienes convenio para descuento por planilla?) Sí/No
+  Q3: Moneda preferida (Soles / Dólares)
+  Q4: Monto y plazo (aquí el chat transiciona a un mini-form embebido)
+- Transiciones de conversación (textos exactos):
+  - "¡Excelente elección! Ahora necesito conocer un poco más sobre ti."
+  - "¿Tienes convenio con alguna empresa para descuento por planilla?"
+  - "Perfecto. ¿En qué moneda prefieres tu préstamo?"
+  - "¡Muy bien! Ahora cuéntame los detalles de tu préstamo:"
+- El mini-form embebido debe tener:
+  - monto (input numérico)
+  - plazo (select: 6, 12, 18, 24, 36, 48)
+  - moneda (preseleccionada por Q3, editable)
+- Validación: monto > 0; plazo seleccionado.
+
+2) SISTEMA DE DOCUMENTOS (checklist dinámico)
+Checklist con 5 items:
+- DNI frente
+- DNI reverso
+- Selfie
+- Constancia de ingresos
+- Comprobante de domicilio
+
+Estados visuales por item:
+- Pendiente (gris #d1d5db)
+- Subido (verde #22c55e)
+- Observado (ámbar #f59e0b)
+
+Interacción:
+- Botón “Subir” por cada documento que simula carga (sin archivos reales). Al click:
+  - muestra animación de “cargando 1s”
+  - cambia estado a “Subido”
+- Debe existir un modo “Observado”:
+  - Un botón contextual “Marcar observado” (solo visible en modo debug) para probar UX.
+  - Si un doc está “Observado”, el agente debe pedir reintento con tono cordial.
+- La app no permite pasar a evaluación si algún documento está Pendiente u Observado.
+
+Texto exacto cuando se entra a documentos:
+"¡Perfecto! Para continuar con tu solicitud, necesito que subas los siguientes documentos:"
+
+3) BARRA DE PROGRESO
+- Mostrar “Paso X de 4” durante el flujo.
+- Porcentaje visual.
+- Debe actualizarse conforme avanza:
+  Paso 1: Tipo de préstamo
+  Paso 2: Preguntas guiadas
+  Paso 3: Datos préstamo (form)
+  Paso 4: Documentos
+- Inicialmente oculta; aparece al iniciar flujo.
+
+4) VALIDACIÓN Y TIMELINE
+Después de documentos OK:
+- Pantalla de validación con animación de carga (4 segundos total).
+- Mostrar pasos validados (con checks progresivos):
+  - verificando identidad
+  - validando documentos
+  - analizando capacidad crediticia
+
+Textos exactos:
+"¡Todos los documentos recibidos! Ahora voy a validar tu información."
+"Estoy revisando tus documentos para validar que se vean claros y completos. Esto puede tomar unos minutos."
+
+Generar número de solicitud único: "SOL-XXXXXXXX" (8 caracteres alfanuméricos mayúsculas).
+Luego mostrar timeline visual con 4 estados:
+- solicitud iniciada
+- documentos recibidos
+- en evaluación
+- resultado final
+
+Resultado final (aprobada / rechazada) debe ser SIMULADO con una lógica simple:
+- Si monto <= 15000 y plazo <= 24: “Aprobada”
+- Si no: “Rechazada”
+Pero el texto debe sonar humano, profesional y cordial, con próximos pasos accionables.
+
+Estados de solicitud (textos exactos):
+- En registro: "Tu solicitud ha sido registrada"
+- En evaluación: "Estamos analizando tu solicitud"
+- Aprobada: "¡Felicidades! Tu préstamo fue aprobado"
+- Rechazada: "Lo sentimos, no pudimos aprobar tu solicitud"
+
+5) ESTADO DEL AGENTE
+En header:
+- Indicador de estado con punto de color:
+  - En línea (verde)
+  - Revisando (ámbar)
+  - Conectando (azul)
+- Nombre del asistente personalizable (ej: “Asistente BanCom”).
+- Texto descriptivo del estado.
+
+6) ACCIONES PERSISTENTES (disponibles siempre)
+Barra fija o flotante con 3 botones:
+- Ver estado de solicitud
+- Subir documentos
+- Hablar con ejecutivo
+
+Estos botones deben funcionar en cualquier paso:
+- “Ver estado” abre modal/pantalla con timeline + número SOL si existe.
+- “Subir documentos” lleva a la sección checklist.
+- “Hablar con ejecutivo” muestra un mensaje del agente con opciones (ej: horarios / canal), sin salir de la app.
+
+7) INTERFAZ DE ENTRADA (tipo WhatsApp)
+- Campo texto placeholder: "Escribe aquí..."
+- Botón enviar
+- Botón adjuntar
+- Botón tomar foto
+- Detección básica de intención por keywords (sin IA):
+  - si incluye “estado” => abre estado
+  - si incluye “documento”, “dni”, “selfie” => abre documentos
+  - si incluye “ayuda” => muestra ayuda
+  - si incluye “hablar”, “ejecutivo” => hablar con ejecutivo
+
+Chat bubbles:
+- Usuario: azul a la derecha (#1d4ed8) texto blanco
+- Agente: gris claro a la izquierda (superficie #f8fafc) texto #334155
+
+Interacciones:
+- Typing indicator (3 puntos) cuando el agente “escribe”.
+- Animaciones fade-in en mensajes y tarjetas.
+- Auto-scroll al último mensaje.
+- Deshabilitar botones durante “cargas” o “escritura”.
+
+========================
+DISEÑO VISUAL (OBLIGATORIO)
+========================
+Paleta:
+- Azul BanCom primario: #1d4ed8
+- Azul secundario: #3b82f6
+- Fondo: #ffffff
+- Superficie: #f8fafc
+- Texto: #334155
+- Verde éxito: #22c55e
+- Ámbar observado: #f59e0b
+- Gris pendiente: #d1d5db
+
+Estilo:
+- Profesional, sobrio, moderno, cálido
+- Mucho espacio blanco
+- Tarjetas limpias con bordes suaves
+- Iconografía simple (usa SVG inline o Heroicons via SVG copiado, no frameworks)
+- Tipografía: Plus Jakarta Sans (Google Fonts)
+
+Responsive:
+- Mobile-first
+- Contenedor centrado max-w-[448px]
+- Todo clickeable con feedback
+
+========================
+PERSISTENCIA (OPCIONAL PERO DESEABLE)
+========================
+Usa localStorage para guardar:
+- paso actual
+- respuestas del usuario
+- estado de documentos
+- número de solicitud SOL
+- estado final (aprobada/rechazada)
+Al recargar, debe restaurar.
+
+========================
+ESTRUCTURA DEL PROYECTO (EN REPLIT)
+========================
+Entrega un proyecto con:
+- index.html
+- /assets (si aplica)
+- app.js
+- styles.css (si hace falta; preferir Tailwind CDN + utilidades)
+
+En index.html:
+1) Header con: logo BanCom (simple), nombre agente, estado, botón ayuda
+2) Progress bar (oculta inicialmente)
+3) Chat container con scroll
+4) Quick actions bar (oculta inicialmente, pero acciones persistentes siempre accesibles)
+5) Input area con botones adjuntar/cámara, campo texto y enviar
+
+========================
+LÓGICA (OBLIGATORIO)
+========================
+Implementa un state machine explícito:
+States sugeridos:
+- LANDING
+- CHOOSE_LOAN_TYPE
+- Q_USER_TYPE
+- Q_CONVENIO
+- Q_CURRENCY
+- FORM_AMOUNT_TERM
+- DOC_CHECKLIST
+- VALIDATING
+- RESULT
+
+Cada transición debe:
+- agregar mensaje agente
+- mostrar chips si aplica
+- actualizar progreso
+- actualizar estado del agente (en línea / revisando / conectando) según acción
+
+========================
+“LLM PAYLOAD” (PREPARADO PARA GPT-4o-mini)
+========================
+Implementa una función buildPromptPayload() que construya:
+{
+  system: SPRINT1_SYSTEM_PROMPT,
+  conversation_context: { loanType, userType, convenio, currency, amount, term, documentsStatus, currentStep },
+  user_message: "<ultimo mensaje del usuario>",
+  required_validations: ["cada mensaje debe tener respuesta", "no avanzar sin docs completos"]
+}
+
+En modo SIMULADO, no llamas API: generas respuestas con un generador basado en state + intención.
+En modo INTEGRADO, solo muestra un aviso y loguea el payload en consola (no enviar a internet).
+
+========================
+CONTENIDO Y TONO
+========================
+- Conversación casual, no interrogatorio.
+- El agente guía, confirma, y explica el siguiente paso.
+- “Sugerencia humana”, cálida, clara, accionable.
+- Profesional y cordial.
+
+========================
+FLUJO COMPLETO (DEBE FUNCIONAR ENTERO)
+========================
+1) Usuario toca “Solicitar préstamo” o escribe
+2) Selecciona tipo préstamo
+3) Responde preguntas con chips
+4) Completa form monto/plazo
+5) Sube 5 documentos
+6) Validación simulada 4s
+7) Muestra SOL-XXXXXXXX y timeline
+8) Opciones finales: ver estado, explorar productos (puede ser placeholder), volver al inicio (resetea estado)
+
+========================
+CRITERIOS DE ACEPTACIÓN
+========================
+- Todo botón funciona
+- No hay errores en consola
+- UI profesional + cálida
+- Funciona en móvil y desktop
+- Smooth transitions
+- Lógica clara y comentada
+- Checklist bloquea evaluación si falta algo
+- Acciones persistentes accesibles siempre
+- Auto-scroll + typing indicator funcionan
+- LocalStorage restaura estado
+
+Construye el código ahora.
