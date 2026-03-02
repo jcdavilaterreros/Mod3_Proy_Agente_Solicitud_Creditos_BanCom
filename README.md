@@ -139,39 +139,40 @@ El MVP opera con un motor conversacional basado en **estado** (state machine) y 
 │  └─ brand/            # logo/íconos
 └─ README.md
 
+---
 
 ## 9. Posibles mejoras o evoluciones (basado en “Proyecto_Mejora del prompt en el Replit.docx”)
 
-## Reset correcto de la demo
+### Reset correcto de la demo
 Al ejecutar la landing debe iniciar siempre “desde cero” (evitar retomar estado anterior).
 
-## Cierre natural del flujo (sin botón forzado “Nueva solicitud”)
+### Cierre natural del flujo (sin botón forzado “Nueva solicitud”)
 Eliminar botón de “nueva solicitud” si se percibe forzado.
 Usar despedida personal (con nombre) + mensaje de contacto + retorno automático a landing.
 
-## Flujo de conversación con Ejecutivo
+### Flujo de conversación con Ejecutivo
 Al elegir “Hablar con ejecutivo”, simular conversación sobre su solicitud.
 Si el usuario pregunta fuera de contexto, derivar a oficina principal:
 Av. Canaval y Moreyra 452, San Isidro para asesoría especializada.
 
-## Correcciones de contenido
+### Correcciones de contenido
 Corregir “Suelas” por Soles en todos los mensajes.
 
-## Orden correcto de captura de datos
+### Orden correcto de captura de datos
 Corregir el orden de campos para evitar saltos ilógicos (ej. correo → celular → ingreso mensual).
 
-##Inactividad
+### Inactividad
 Después de 2 minutos sin actividad, preguntar al usuario y luego despedirse; retornar a la landing.
 
-##Mensajería de resultado más completa
+### Mensajería de resultado más completa
 Si rechaza, informar que un ejecutivo contactará para alternativas financieras.
 Si aprueba, indicar siguiente paso (correo con día/hora de desembolso; cuenta ahorro creada; listo para app) y solicitar confirmación antes de volver a la landing.
 
-## Regla de decisión mejorada (simulador)
+### Regla de decisión mejorada (simulador)
 Aprobar si el monto solicitado es ≤ 30% del sueldo mensual.
 Rechazar si es > 30% del sueldo mensual.
 Mostrar mensaje explicando la regla aplicada.
 
-## Cierre inteligente post-aprobación
+### Cierre inteligente post-aprobación
 Si ya fue aprobada y el usuario solo agradece/se despide, cerrar el flujo, solicitar confirmación y volver a landing.
 i fue rechazada, mantener conversación y derivar a ejecutivo si se sale de contexto.
