@@ -141,7 +141,8 @@ El MVP opera con un motor conversacional basado en **estado** (state machine) y 
 
 ---
 
-# 9. Posibles mejoras o evoluciones (basado en “Proyecto_Mejora del prompt en el Replit.docx”)
+# 9. Posibles mejoras o evoluciones
+(basado en “Proyecto_Mejora del prompt en el Replit.docx”)
 
 ## Reset correcto de la demo
 Al ejecutar la landing debe iniciar siempre “desde cero” (evitar retomar estado anterior).
